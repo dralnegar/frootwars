@@ -29,6 +29,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
  */
+
+Route::get('/', [PostController::class, 'index'])->name('home');
+ 
 Route::get('authors/{author:username}', function (User $author) {
     return view('posts.index', [
         'posts' => $author->posts,
@@ -98,7 +101,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::inertia('/', 'Home')->name('home');
+    
+    
     Route::inertia('/settings', 'Settings')->name('settings');
 
     Route::get('/users', [UsersController::class, 'index'])->name('users');

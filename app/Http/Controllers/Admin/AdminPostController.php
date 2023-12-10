@@ -8,7 +8,14 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use App\Models\Post;
 use App\Models\Common;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
+/**
+ * Class AdminPostController
+ * 
+ * This class is responsible for handling the administration of posts.
+ */
 class AdminPostController extends Controller
 {
    
@@ -18,7 +25,12 @@ class AdminPostController extends Controller
         ]);
     }
     
-    public function create() 
+    /**
+     * Create a new post.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
 
         $categoriesRAW = \App\Models\Category::orderby('name', 'asc')->get();
@@ -30,7 +42,13 @@ class AdminPostController extends Controller
         return view('admin.posts.create', ['categories' => $categories]);
     }
 
-    public function store(Request $request) 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         $attributes = array_merge($this->validatePost(), [
             'user_id' => Auth()->user()->id,
@@ -42,10 +60,19 @@ class AdminPostController extends Controller
         return redirect('/posts/'.$attributes['slug']);
     }
 
-    public function edit(Post $post) 
+    /**
+     * Edit a post.
+     *
+     * @param  Post  $post  The post to be edited.
+     * @return \Illuminate\Http\Response
+     */
+     public function edit(Post $post)
     {
 
-        $categoriesRAW = \App\Models\Category::orderby('name', 'asc')->get();
+        /// die(storage_path($post->thumbnail));
+        // die($post->thumbnail);
+       
+       $categoriesRAW = \App\Models\Category::orderby('name', 'asc')->get();
         $categories = [];
         foreach($categoriesRAW as $category) {
             $categories[$category->id] = $category->name;
@@ -54,11 +81,23 @@ class AdminPostController extends Controller
         return view('admin.posts.edit', ['categories' => $categories, 'post' => $post]);
     }
 
-    public function update(Request $request, Post $post) 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Post $post)
     {
         $attributes = $this->validatePost($post);
 
+        
+        
         if (isset($attributes['thumbnail'])) {
+            if (Storage::drive('public')->exists($post->thumbnail)) {
+                Storage::drive('public')->delete($post->thumbnail);
+            }
             $attributes['thumbnail'] = str_replace('public/', '', $request->file('thumbnail')->store('public/thumbnails'));
         }
             
@@ -68,12 +107,24 @@ class AdminPostController extends Controller
         return back()->with('success', 'Post Updated!');
     }
 
-    public function destroy(Post $post) 
+    /**
+     * Delete a post.
+     *
+     * @param  Post  $post  The post to be deleted.
+     * @return void
+     */
+    public function destroy(Post $post)
     {
         $post->delete();
         return back()->with('success', 'Post Deleted');
     }
 
+    /**
+     * Validates a Post object.
+     *
+     * @param Post|null $post The Post object to validate.
+     * @return array An array containing validation errors, if any.
+     */
     protected function validatePost(?Post $post = null): array {
         $post ??= new Post();
         return request()->validate([
