@@ -18,4 +18,8 @@ class BlogController extends Controller
         return view('blog/post');
     }
 
+    public function test(Request $request) {
+        return view('test');
+    }
+
 }

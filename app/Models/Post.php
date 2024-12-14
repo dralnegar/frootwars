@@ -47,6 +47,10 @@ class Post extends Model
         */
     }
 
+    public function scopeLive($query) {
+        return $query->where('status', 'Live');
+    }
+
     public function comments() {
         return $this->hasMany(Comment::class)->orderby('created_at', 'desc');
     }

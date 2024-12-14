@@ -16,10 +16,14 @@ class PostController extends Controller
         Common::dbLogger();
         $options = [
             'posts' => Post::with('category', 'author')
-                ->latest()
-                ->filter(request(['search', 'category', 'author']))
-                ->paginate(3) // tailwind.blade.php or use ->simplePaginate() for Next / Previous buttons only in simple-tailwind.php, both in views/vendor/paginatation directory
-                ->withQueryString(), // Adds the other get parameters passed in the URI
+            ->live()    
+            ->latest()
+            ->filter(request(['search', 'category', 'author']))
+            ->paginate(3) // tailwind.blade.php or use ->simplePaginate() for Next / Previous buttons only in simple-tailwind.php, both in views/vendor/paginatation directory
+            ->withQueryString(), // Adds the other get parameters passed in the URI
+            'pageTitle' => 'Blog Posts',
+            'categories' => \App\Models\Category::getOptions(),
+                
         ];
 
         return view('posts.index', $options);
@@ -30,6 +34,7 @@ class PostController extends Controller
         // Can be defined as post:slug, but can remove getRouteKeyName() method from Post model
         return view('posts.show', [
             'post' => $post,
+            'pageTitle' => $post->title
         ]);
         // Add constraints to the {post} attribute add ->where('post', '[A-z_\-]+') etc
     }

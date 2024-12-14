@@ -12,6 +12,8 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminPostController;
+use App\Http\Controllers\MainController;
+use App\Http\Controllers\ContactController;
 
 use App\Models\Category;
 use App\Models\Post;
@@ -63,10 +65,10 @@ Route::post('logout', [SessionsController::class, 'destroy'])->name('logout')->m
 Route::get('admin/dashboard', [DashboardController::class, 'dashboard'])->middleware('admin')->name('admin.dashboard');
 Route::get('admin/posts', [AdminPostController::class, 'index'])->middleware('admin')->name('post.list');
 Route::get('admin/posts/create', [AdminPostController::class, 'create'])->middleware('admin')->name('post.create');
-Route::post('admin/posts', [AdminPostController::class, 'store'])->middleware('admin')->name('post.store');
+Route::post('admin/posts/create', [AdminPostController::class, 'store'])->middleware('admin')->name('post.store');
 Route::get('admin/posts/edit/{post:id}', [AdminPostController::class, 'edit'])->middleware('admin')->name('post.edit');
-Route::patch('admin/posts/{post:id}', [AdminPostController::class, 'update'])->middleware('admin')->name('post.update');
-Route::delete('admin/posts/{post:id}', [AdminPostController::class, 'destroy'])->middleware('admin')->name('post.delete');
+Route::post('admin/posts/edit/{post:id}', [AdminPostController::class, 'update'])->middleware('admin')->name('post.update');
+Route::post('admin/posts/delete/{post:id}', [AdminPostController::class, 'delete'])->middleware('admin')->name('post.delete');
 
 
 
@@ -87,8 +89,12 @@ Route::inertia('/welcome', 'Welcome', [
     ],
 ]);
 
+Route::get('facebuk', [MainController::class, 'index'])->name('facebuk');
+Route::get('contact', [ContactController::class, 'index'])->name('contact');
+
 Route::get('blog', [BlogController::class, 'index'])->name('blog');
 Route::get('blog/post', [BlogController::class, 'post'])->name('blog.post');
+Route::get('blog/test', [BlogController::class, 'test'])->name('blog.text');
 
 Route::inertia('/dashboard', 'Dashboard')->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -100,8 +106,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    
     
     Route::inertia('/settings', 'Settings')->name('settings');
 

@@ -1,48 +1,44 @@
 <header class="max-w-xl mx-auto mt-20 text-center">
-    <h1 class="text-4xl">
-        Latest <span class="text-blue-500">Laravel From Scratch</span> News
+    <h1 class="text-2xl">
+        <span class="text-blue-500">Latest Liberators Gaming Club News</span>
     </h1>
 
 
     <div class="space-y-2 lg:space-y-0 lg:space-x-4 mt-4">
         <!--  Category -->
-        <div class="relative lg:inline-flex bg-gray-100 rounded-xl">
-            <x-dropdown>
-               <x-category-dropdown  />
-            </x-dropdown>
-        </div>
-        
-        
-        <!-- Other Filters 
-        <div class="relative flex lg:inline-flex items-center bg-gray-100 rounded-xl">
-            <select class="flex-1 appearance-none bg-transparent py-2 pl-3 pr-9 text-sm font-semibold">
-                <option value="category" disabled selected>Other Filters
-                </option>
-                <option value="foo">Foo
-                </option>
-                <option value="bar">Bar
-                </option>
+        <div class="relative lg:inline-flex rounded-xl">
+            <select id="category_field" name="category" placeholder="Select Category" class="border border-gray-200 p-2 w-full rounded">
+                <option value="all" {{ request('category') == 'all' ? 'selected' : '' }}>All Categories</option>
+                @foreach ($categories as $key => $category)
+                    <option value="{{ $key }}" {{ request('category') == $key ? 'selected' : '' }}>{{ ucwords($category) }}</option>
+                @endforeach
             </select>
-            <x-icon name="down-arrow" class="absolute pointer-events-none" style="right: 12px;"/>
         </div>
-        -->
-
-        <!-- Search -->
-        <div class="relative flex lg:inline-flex items-center bg-gray-100 rounded-xl px-3 py-2">
-            <form method="GET" action="/posts">
-                @if (request('category')) 
-                    <input type="hidden" name="category" value="{{ request('category') }}"/>
-                @endif
-                <input 
-                    type="text" 
+        
+        <div class="relative lg:inline-flex rounded-xl">
+            <input type="text" 
+                    id="search_field"
                     name="search" 
                     placeholder="Find something"
-                    class="bg-transparent placeholder-black font-semibold text-sm"
+                    class="border border-gray-200 p-2 w-full rounded"
                     value="{{ request('search') }}"
                 >
-
-            </form>
         </div>
+
+        <div class="relative lg:inline-flex rounded-xl">
+            <button class="button">
+                Search
+            </button>
+        </div>
+
+        
+        <form method="GET" action="/posts">
+            <input type="hidden" id="category" name="category" value="{{ request('category') }}"/>
+            <input type="hidden" id="search" name="search" value="{{ request('search') }}"/>
+        </form>
+
+        
+        
                      
     </div>
 </header>

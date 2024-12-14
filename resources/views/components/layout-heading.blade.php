@@ -1,31 +1,44 @@
-<nav class="md:flex md:justify-between md:items-center">
-    <div>
-        <a href="/">
-            <img src="/images/logo.svg" alt="Laracasts Logo" width="165" height="16">
-        </a>
+<!-- Header -->
+
+    <div id="header-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+
+                    <header id="header">
+                        <h1><a href="/"><img src="{{ asset('storage/007.jpg') }}" alt="Tamworth Liberators Gaming Club" style="max-width:100px;padding:10px;"></h1>
+                        <nav id="nav">
+                            <a href="/" class="current-page-item">Homepage</a>
+                            <!--
+                            <a href="twocolumn1.html">Two Column #1</a>
+                            <a href="twocolumn2.html">Two Column #2</a>
+                            <a href="onecolumn.html">One Column</a>
+                            <a href="threecolumn.html">Three Column</a>
+                            <li> <a class="page" href="about.html">About</a> </li>
+                            <li> <a class="page" href="services.html">Services</a> </li>
+                            <li> <a class="page" href="portfolio.html">Work</a> </li>
+                            <li class="last "> <a class="page selected" href="contact.html">Contact</a> </li>
+                
+                
+                            -->
+                            @auth
+                            <a href="/admin/dashboard">Welcome {{ auth()->user()->name }}</a>
+                            <a id="logout" href="#">Logout</a>
+                            <form id="logout-form" method="POST" action="/logout" class="hidden">
+                                @csrf
+                            </form>
+                        @else
+                            <a href="/register">Register</a>
+                            <a href="/login">Log In</a>
+                            <a href="#newsletter">Subscribe for Updates</a>
+                        @endauth
+                    </ul>
+                        </nav>
+                    </header>
+
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="mt-8 md:mt-0 flex items-center">
-        @auth
-            <x-dropdown>
-                <x-slot name="trigger">
-                    <button class="text-xs font-bold uppercase">Welcome {{ auth()->user()->name }}</button>
-                </x-slot>
-                <x-dropdown-item href="/admin/dashboard" :active="request()->routeIS('admin.dashboard')">Dashboard</x-dropdown-item>
-                <x-dropdown-item href="/admin/posts/create" :active="request()->routeIS('post.create')">New Post</x-dropdown-item>
-                <x-dropdown-item href="#" x-data="{}" @click.prevent="document.querySelector('#logout-form').submit()">Log Out</x-dropdown-item>
-            </x-dropdown>
-            <form id="logout-form" method="POST" action="/logout" class="hidden">
-                @csrf
-            </form>
-        @else
-            <a href="/register" class="text-xs font-bold uppercase hover:text-blue-500">Register</a>
-            <a href="/login" class="ml-6 text-xs font-bold uppercase hover:text-blue-500" >Log In</a>
-        @endguest
 
-        <a href="#newsletter"
-            class="bg-blue-500 ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-5">
-            Subscribe for Updates
-        </a>
-    </div>
-</nav>

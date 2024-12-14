@@ -32,14 +32,10 @@ class AdminPostController extends Controller
      */
     public function create()
     {
-
-        $categoriesRAW = \App\Models\Category::orderby('name', 'asc')->get();
-        $categories = [];
-        foreach($categoriesRAW as $category) {
-            $categories[$category->id] = $category->name;
-        }
-        
-        return view('admin.posts.create', ['categories' => $categories]);
+        return view('admin.posts.create', [
+            'categories' => \App\Models\Category::getOptions(),
+            'post' => new Post()
+        ]);
     }
 
     /**
@@ -69,10 +65,11 @@ class AdminPostController extends Controller
      public function edit(Post $post)
     {
 
-        /// die(storage_path($post->thumbnail));
-        // die($post->thumbnail);
+        if (Auth()->user()->access_level < 2) {
+            return back()->with('error', 'You do not have permission to edit this post.');
+        }
        
-       $categoriesRAW = \App\Models\Category::orderby('name', 'asc')->get();
+        $categoriesRAW = \App\Models\Category::orderby('name', 'asc')->get();
         $categories = [];
         foreach($categoriesRAW as $category) {
             $categories[$category->id] = $category->name;
@@ -91,9 +88,7 @@ class AdminPostController extends Controller
     public function update(Request $request, Post $post)
     {
         $attributes = $this->validatePost($post);
-
-        
-        
+                
         if (isset($attributes['thumbnail'])) {
             if (Storage::drive('public')->exists($post->thumbnail)) {
                 Storage::drive('public')->delete($post->thumbnail);
@@ -104,7 +99,7 @@ class AdminPostController extends Controller
 
         $post->update($attributes);
         
-        return back()->with('success', 'Post Updated!');
+        return redirect('/admin/posts')->with('success', 'Post Updated');
     }
 
     /**
@@ -115,6 +110,11 @@ class AdminPostController extends Controller
      */
     public function destroy(Post $post)
     {
+        
+        if (Auth()->user()->access_level < 2) {
+            return back()->with('error', 'You do not have permission to delete this post.');
+        }
+        
         $post->delete();
         return back()->with('success', 'Post Deleted');
     }
@@ -133,7 +133,8 @@ class AdminPostController extends Controller
             'slug' => ['required', Rule::unique('posts', 'slug')->ignore($post)],
             'excerpt' => 'required',
             'body' => 'required',
-            'category_id' => ['required', Rule::exists('categories', 'id')]
+            'category_id' => ['required', Rule::exists('categories', 'id')],
+            'status' => ['required', Rule::in(['Draft', 'Live'])],
         ]);  
         return $attributes;   
     }
