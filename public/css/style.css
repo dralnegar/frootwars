@@ -1193,3 +1193,7 @@ select:focus,
 	width:728px;
 }
 #vertical-ad{display:none;}
+
+textarea {
+	min-height: 100px;
+}

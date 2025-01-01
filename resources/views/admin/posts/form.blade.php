@@ -26,16 +26,6 @@
     
     <x-form.textarea name="excerpt" label='Excerpt' placeholder='Enter Post Exceprt' required=true value="{!! old('excerpt', strip_tags($post->excerpt)) !!}"/>
     
-    <script src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-    <script>
-        tinymce.init({
-            selector: '#body',
-            plugins: ['powerpaste', 'advcode', 'table', 'lists', 'checklist'],
-            toolbar: 'formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | table | link image | bullist numlist | removeformat | src',
-            menubar: false
-        });
-    </script>
-    
     <x-form.textarea 
         name="body" 
         label='Body' 

@@ -12,6 +12,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminPostController;
+use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ContactController;
 
@@ -68,10 +69,14 @@ Route::get('admin/posts/create', [AdminPostController::class, 'create'])->middle
 Route::post('admin/posts/create', [AdminPostController::class, 'store'])->middleware('admin')->name('post.store');
 Route::get('admin/posts/edit/{post:id}', [AdminPostController::class, 'edit'])->middleware('admin')->name('post.edit');
 Route::post('admin/posts/edit/{post:id}', [AdminPostController::class, 'update'])->middleware('admin')->name('post.update');
-Route::post('admin/posts/delete/{post:id}', [AdminPostController::class, 'delete'])->middleware('admin')->name('post.delete');
+Route::post('admin/posts/delete/{post:id}', [AdminPostController::class, 'destroy'])->middleware('admin')->name('post.delete');
 
-
-
+Route::get('admin/categories', [AdminCategoryController::class, 'index'])->middleware('admin')->name('category.list');
+Route::get('admin/categories/create', [AdminCategoryController::class, 'create'])->middleware('admin')->name('category.create');
+Route::post('admin/categories/create', [AdminCategoryController::class, 'store'])->middleware('admin')->name('category.store');
+Route::get('admin/categories/edit/{category:id}', [AdminCategoryController::class, 'edit'])->middleware('admin')->name('category.edit');
+Route::post('admin/categories/edit/{category:id}', [AdminCategoryController::class, 'update'])->middleware('admin')->name('category.update');
+Route::post('admin/categories/delete/{category:id}', [AdminCategoryController::class, 'destroy'])->middleware('admin')->name('category.delete');
 
 /*
 Route::get('login', [LoginController::class, 'create'])->name('login');

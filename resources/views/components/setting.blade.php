@@ -17,6 +17,13 @@
                     <a href="/admin/posts/create" class="{{ request()->routeIS('post.create') ? 'text-blue-500' : '' }}">Create Post</a>
                 </li>
                 <li>
+                    <a href="/admin/categories" class="{{ request()->routeIS('categories.index') ? 'text-blue-500' : '' }}">All Categories</a>
+                </li>
+                <li>
+                    <a href="/admin/categories/create" class="{{ request()->routeIS('categories.create') ? 'text-blue-500' : '' }}">Create Categories</a>
+                </li>
+                
+                <li>
                     <a href="#" id="logout-link">Log Out</a>
                 </li>
             </ul>

@@ -114,6 +114,10 @@ class AdminPostController extends Controller
         if (Auth()->user()->access_level < 2) {
             return back()->with('error', 'You do not have permission to delete this post.');
         }
+     
+        if (Storage::drive('public')->exists($post->thumbnail)) {
+            Storage::drive('public')->delete($post->thumbnail);
+        }
         
         $post->delete();
         return back()->with('success', 'Post Deleted');
